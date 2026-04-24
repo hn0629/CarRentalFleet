@@ -40,7 +40,6 @@ Car Rental Project/
 │   ├── staging/
 │   └── processed/
 ├── reports/
-├── schema/
 ├── README.md
 ├── requirements.txt
 ├── Dockerfile
