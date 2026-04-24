@@ -1,24 +1,24 @@
 # Car Rental Data Pipeline
 
-A modular Python data engineering project that ingests raw rental data, transforms it into useful summary tables, validates the outputs, and prepares final reporting artifacts for analysis.
+A modular Python data engineering project that ingests raw rental data, transforms it into summary tables, validates the outputs, and generates reporting artifacts for analysis and presentation.
 
 ## Overview
 
-This project demonstrates a simple ETL-style workflow for car rental data. It focuses on clean pipeline structure, data validation, reusable transformations, and automated testing.
+This project demonstrates a simple ETL-style workflow for car rental data. It focuses on clean pipeline structure, reusable transformations, output validation, and reporting outputs that can support business decisions.
 
 ## Pipeline Stages
 
 ### 01_ingest.py
-Loads raw source files and places them into a staging-ready format.
+Reads the raw Excel workbook from `data/raw/` and writes normalized parquet files into `data/staging/`.
 
 ### transform.py
-Cleans the data, standardizes columns, validates required fields, adds derived metrics, and builds summary tables.
+Cleans and standardizes the staged data, validates required fields, adds derived metrics, and builds summary tables for cars and branches.
 
 ### 03_validate.py
-Checks output schemas, null values, and expected data types to confirm the processed data is ready for use.
+Checks the processed outputs in `data/processed/` for required values and basic data quality rules.
 
 ### 04_report.py
-Generates final reporting outputs and summary artifacts for review.
+Creates final reporting tables and Plotly charts in `reports/` for the top cars and branches by profit and revenue.
 
 ## Project Structure
 
@@ -36,6 +36,7 @@ Car Rental Project/
 │   ├── test_validate.py
 │   └── test_end_to_end.py
 ├── data/
+│   ├── raw/
 │   ├── staging/
 │   └── processed/
 ├── reports/
@@ -49,25 +50,40 @@ Car Rental Project/
 
 ## Data Inputs
 
-The pipeline expects these parquet files in `data/staging/`:
+The ingest stage expects the raw Excel workbook in `data/raw/` and reads these sheets:
 
-- `cars.parquet`
-- `costs.parquet`
-- `revenue.parquet`
-- `branches.parquet`
+- `1_car_id_mapping`
+- `2_car_costs`
+- `3_car_revenue`
+- `4_branch_location`
 
 ## Outputs
 
-The pipeline writes the following processed files to `data/processed/`:
+The pipeline writes the following artifacts:
 
-- `car_summary.csv`
-- `car_summary.parquet`
-- `branch_summary.csv`
-- `branch_summary.parquet`
+### Staging
+- `data/staging/cars.parquet`
+- `data/staging/costs.parquet`
+- `data/staging/revenue.parquet`
+- `data/staging/branches.parquet`
+
+### Processed
+- `data/processed/car_summary.csv`
+- `data/processed/car_summary.parquet`
+- `data/processed/branch_summary.csv`
+- `data/processed/branch_summary.parquet`
+
+### Reports
+- `reports/top_10_profit.csv`
+- `reports/top_10_revenue.csv`
+- `reports/top_10_branches.csv`
+- `reports/top_10_profit.png`
+- `reports/top_10_revenue.png`
+- `reports/top_10_branches.png`
 
 ## How to Run
 
-Run the pipeline stages as needed:
+Run each stage in order:
 
 ```powershell
 python pipelines/01_ingest.py
@@ -87,7 +103,7 @@ python -m pytest -q
 ## Testing Strategy
 
 This project includes:
-- Unit tests for column standardization, validation, and aggregation.
+- Unit tests for cleaning, validation, and aggregation logic.
 - End-to-end tests for pipeline output creation.
 - Fixture-based sample data for repeatable test cases.
 
@@ -95,17 +111,17 @@ This project includes:
 
 The outputs help answer questions such as:
 - Which car makes and models produce the strongest profit?
-- Which branches have the highest fleet activity?
-- Where should the business focus future vehicle purchases or replacements?
+- Which cars generate the strongest revenue?
+- Which branches should be prioritized for future vehicle purchases?
 
 ## Future Improvements
 
 Possible next steps:
-- Use all raw input tables in joins and enrichment logic.
-- Add stronger schema checks for source and output data.
-- Expand reporting with charts or dashboard-ready tables.
-- Add data quality thresholds for production-style validation.
+- Add joins so all staged tables are used directly in transformation.
+- Expand validation with stricter schema and range checks.
+- Add a dashboard or notebook summary for the reporting outputs.
+- Parameterize file paths for easier deployment.
 
 ## Author
 
-Built as a data engineering portfolio project focused on modular pipeline design, testing, and reproducible analytics outputs.
+Built as a data engineering portfolio project focused on modular pipeline design, testing, validation, and reporting outputs.
