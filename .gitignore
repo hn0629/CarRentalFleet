@@ -2,7 +2,4 @@
 __pycache__/
 .ipynb_checkpoints/
 *.pyc
-data/staging/
-data/processed/
-reports/
 *.pptx
