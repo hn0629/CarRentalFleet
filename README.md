@@ -1,54 +1,88 @@
-# Car Rental Project
+# Car Rental Data Pipeline
 
-This project ingests a rental car Excel workbook, transforms it into clean staging and summary tables, validates the outputs, and generates basic reports.
+A Python data pipeline that cleans rental fleet data, builds summary tables, and helps identify the most profitable car models and branch locations for purchase decisions.
 
-## Project structure
+## Overview
 
-- `data/raw/` — source Excel file.
-- `data/staging/` — cleaned Parquet extracts.
-- `data/processed/` — grouped summary tables.
-- `reports/` — CSV outputs and PNG charts.
-- `pipelines/` — Python scripts for each pipeline step.
+This project processes raw car rental data into curated summary outputs for analysis and reporting. It includes data validation, derived metrics, aggregation logic, and automated tests.
 
-## Setup
+## What it does
 
-Install dependencies:
+- Loads raw parquet files from `data/staging/`.
+- Standardizes column names.
+- Validates required fields and numeric columns.
+- Creates derived metrics such as profit margin and cost ratio.
+- Builds summary tables by car model and branch location.
+- Saves processed outputs as CSV and Parquet files.
 
-```bash
-pip install -r requirements.txt
+## Project Structure
+
+```text
+Car Rental Project/
+├── pipelines/
+│   └── transform.py
+├── tests/
+│   ├── conftest.py
+│   ├── test_transform.py
+│   └── test_end_to_end.py
+├── data/
+│   ├── staging/
+│   └── processed/
+└── README.md
 ```
 
-## Run the pipeline
+## Data Inputs
 
-Run each step from the project root:
+Place these files in `data/staging/` before running the pipeline:
 
-```bash
-python pipelines/01_ingest.py
-python pipelines/02_transform.py
-python pipelines/03_validate.py
-python pipelines/04_report.py
-```
+- `cars.parquet`
+- `costs.parquet`
+- `revenue.parquet`
+- `branches.parquet`
 
 ## Outputs
 
-After a successful run, you should have:
+The pipeline writes these files to `data/processed/`:
 
-- `data/staging/cars.parquet`
-- `data/staging/costs.parquet`
-- `data/staging/revenue.parquet`
-- `data/staging/branches.parquet`
-- `data/processed/car_summary.csv`
-- `data/processed/car_summary.parquet`
-- `data/processed/branch_summary.csv`
-- `data/processed/branch_summary.parquet`
-- `reports/top_10_profit.csv`
-- `reports/top_10_revenue.csv`
-- `reports/top_10_branches.csv`
-- `reports/top_10_profit.png`
-- `reports/top_10_revenue.png`
-- `reports/top_10_branches.png`
+- `car_summary.csv`
+- `car_summary.parquet`
+- `branch_summary.csv`
+- `branch_summary.parquet`
 
-## Notes
+## Run the Pipeline
 
-- The pipeline is designed to be run from the repository root.
-- If you change any file paths, update the scripts accordingly.
+```powershell
+python pipelines/transform.py
+```
+
+## Run Tests
+
+```powershell
+python -m pytest -q
+```
+
+## Testing Strategy
+
+The project uses:
+- Unit tests for cleaning, validation, and aggregation functions.
+- Fixture-based sample data for repeatable test cases.
+- An end-to-end test that verifies the pipeline writes output files correctly.
+
+## Key Insights
+
+The outputs help answer questions like:
+- Which car makes and models generate the strongest profit?
+- Which branches have the highest fleet activity?
+- Where should the business focus future purchases or replacements?
+
+## Future Improvements
+
+Possible next steps:
+- Join and use the additional input tables more fully.
+- Add more schema checks for incoming data.
+- Add tests that verify output contents, not just file creation.
+- Build a dashboard from the processed summaries.
+
+## Author
+
+Built as a data engineering and analytics portfolio project focused on clean transformation logic, testing, and reproducible outputs.
